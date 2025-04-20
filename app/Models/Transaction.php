@@ -11,7 +11,7 @@ class Transaction extends Model
     
     use SoftDeletes;
 
-    protected array $fillable = ['sim_registration_id', 'transaction_date', 'transaction_amount'];
+    protected $fillable = ['sim_registration_id', 'transaction_date', 'transaction_amount'];
 
     protected function casts() : array {
         return [

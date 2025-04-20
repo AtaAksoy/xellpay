@@ -11,7 +11,7 @@ class BillDetail extends Model
     
     use SoftDeletes;
 
-    protected array $fillable = ['bill_id', 'usage_id', 'amount'];
+    protected $fillable = ['bill_id', 'usage_id', 'amount'];
 
     public function bill() : BelongsTo {
         return $this->belongsTo(Bill::class);

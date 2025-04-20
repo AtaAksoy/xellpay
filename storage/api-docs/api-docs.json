@@ -1,0 +1,79 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "XellPay API Documentation",
+        "description": "xellpay api",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://xellpay.test",
+            "description": "local server"
+        }
+    ],
+    "paths": {
+        "/api/v1/subscriber/": {
+            "put": {
+                "tags": [
+                    "Subscriber"
+                ],
+                "summary": "Create a subscriber",
+                "operationId": "d517394b07a3d21ab09f60fa2d265544",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Subscriber Name",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Subscriber Email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Password",
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Password confirmation",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Register Successfully"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Subscriber",
+            "description": "Subscriber"
+        }
+    ]
+}

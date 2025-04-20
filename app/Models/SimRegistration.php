@@ -11,7 +11,7 @@ class SimRegistration extends Model
     
     use SoftDeletes;
 
-    protected array $fillable = ['phone_number', 'subscriber_id'];
+    protected $fillable = ['phone_number', 'subscriber_id'];
 
     public function usages() : HasMany {
         return $this->hasMany(Usage::class);

@@ -11,7 +11,7 @@ class Bill extends Model
     
     use SoftDeletes;
 
-    protected array $fillable = ['sim_registration_id', 'bill_date'];
+    protected $fillable = ['sim_registration_id', 'bill_date'];
 
     protected function casts() : array
     {

@@ -12,7 +12,7 @@ class Usage extends Model
     
     use SoftDeletes;
 
-    protected array $fillable = ['sim_registration_id', 'usage_date', 'feature_type', 'feature_amount'];
+    protected $fillable = ['sim_registration_id', 'usage_date', 'feature_type', 'feature_amount'];
 
     protected function casts() : array
     {
