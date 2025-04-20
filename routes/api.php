@@ -11,6 +11,7 @@ Route::prefix('v1')->name('v1.')->middleware('force-json')->group(function() {
 
     Route::prefix('subscriber')->name('subscriber.')->group(function() {
         Route::put('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'create']);
+        Route::post('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'login']);
     });
 
 
