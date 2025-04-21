@@ -115,12 +115,93 @@
                     }
                 }
             }
+        },
+        "/api/v1/usage/": {
+            "put": {
+                "tags": [
+                    "Usage"
+                ],
+                "summary": "Add usage to subscriber",
+                "operationId": "29f5e24fadf157690ec96a9046e42d6b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subscriber_no",
+                                    "month",
+                                    "usage_type",
+                                    "usage_amount"
+                                ],
+                                "properties": {
+                                    "subscriber_no": {
+                                        "description": "Subscriber No",
+                                        "type": "string"
+                                    },
+                                    "month": {
+                                        "description": "Month (1-12)",
+                                        "type": "integer"
+                                    },
+                                    "usage_type": {
+                                        "description": "Usage Type",
+                                        "type": "string",
+                                        "enum": [
+                                            "SMS",
+                                            "CALL",
+                                            "INTERNET"
+                                        ]
+                                    },
+                                    "usage_amount": {
+                                        "description": "Usage Amount",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usage Added"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "JWT Bearer Token Authorization",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
         {
             "name": "Subscriber",
             "description": "Subscriber"
+        },
+        {
+            "name": "Usage",
+            "description": "Usage"
         }
     ]
 }

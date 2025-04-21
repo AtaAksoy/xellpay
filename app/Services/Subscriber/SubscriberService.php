@@ -8,10 +8,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class SubscriberService {
+class SubscriberService
+{
 
-    
-    public function create(SubscriberDTO $subscriber) : ?SubscriberDTO {
+
+    public function create(SubscriberDTO $subscriber): ?SubscriberDTO
+    {
         $user = User::create([
             'name' => $subscriber->name,
             'email' => $subscriber->email,
@@ -24,19 +26,15 @@ class SubscriberService {
         return $dto;
     }
 
-    public function login(SubscriberLoginRequest $request) : ?SubscriberDTO {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+    public function login(SubscriberLoginRequest $request): ?SubscriberDTO
+    {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $data = [];
-            $token = $user->createToken('xellpay-auth')->plainTextToken; 
+            $token = $user->createToken('xellpay-auth')->plainTextToken;
             $dto = new SubscriberDTO($user->name, $user->email, null, $token);
-            
+
             return $dto;
-        } 
-        else{ 
+        } else
             return null;
-        } 
     }
-
-
 }

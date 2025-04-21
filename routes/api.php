@@ -7,11 +7,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix('v1')->name('v1.')->middleware('force-json')->group(function() {
+Route::prefix('v1')->name('v1.')->middleware(['force-json'])->group(function() {
 
     Route::prefix('subscriber')->name('subscriber.')->group(function() {
-        Route::put('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'create']);
-        Route::post('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'login']);
+        Route::put('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'create'])->name('register');
+        Route::post('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'login'])->name('login');
+    });
+
+    Route::prefix('usage')->name('usage.')->middleware(['force-json', 'auth:sanctum'])->group(function() {
+        Route::put('/', [App\Http\Controllers\Api\v1\UsageController::class, 'addUsage'])->name('add-usage');
     });
 
 

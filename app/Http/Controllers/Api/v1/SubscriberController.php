@@ -8,6 +8,7 @@ use App\Http\Requests\SubscriberCreateRequest;
 use App\Http\Requests\SubscriberLoginRequest;
 use App\Services\Subscriber\SubscriberService;
 use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
@@ -16,6 +17,13 @@ use OpenApi\Attributes as OA;
     OA\Info(version: "1.0.0", description: "xellpay api", title: "XellPay API Documentation"),
     OA\Server(url: 'http://xellpay.test', description: "local server"),
 ]
+#[OA\SecurityScheme(
+    securityScheme: "bearerAuth",
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT",
+    description: "JWT Bearer Token Authorization"
+)]
 class SubscriberController extends Controller
 {
 
@@ -50,8 +58,7 @@ class SubscriberController extends Controller
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Server Error")
         ]
     )]
-    public function create(SubscriberCreateRequest $request)
-    {
+    public function create(SubscriberCreateRequest $request) : JsonResponse {
         $dto = SubscriberDTO::fromRequest($request->validated());
 
         $user = $this->subscriberService->create($dto);
@@ -86,7 +93,7 @@ class SubscriberController extends Controller
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Server Error")
         ]
     )]
-    public function login(SubscriberLoginRequest $request) {
+    public function login(SubscriberLoginRequest $request) : JsonResponse {
         $response = $this->subscriberService->login($request);
 
         if ($response instanceof SubscriberDTO)
