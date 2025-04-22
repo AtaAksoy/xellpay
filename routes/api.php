@@ -14,8 +14,12 @@ Route::prefix('v1')->name('v1.')->middleware(['force-json'])->group(function() {
         Route::post('/', [App\Http\Controllers\Api\v1\SubscriberController::class, 'login'])->name('login');
     });
 
-    Route::prefix('usage')->name('usage.')->middleware(['force-json', 'auth:sanctum'])->group(function() {
+    Route::prefix('usage')->name('usage.')->middleware(['auth:sanctum'])->group(function() {
         Route::put('/', [App\Http\Controllers\Api\v1\UsageController::class, 'addUsage'])->name('add-usage');
+    });
+
+    Route::prefix('bill')->name('bill.')->middleware(['auth:sanctum'])->group(function() {
+        Route::post('calculate', [App\Http\Controllers\Api\v1\BillController::class, 'calculateBill'])->name('calculate');
     });
 
 

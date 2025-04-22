@@ -31,9 +31,8 @@ class UsageController extends Controller
                 mediaType: "application/json",
                 schema: new OA\Schema(
                     type: "object",
-                    required: ['subscriber_no', 'month', 'usage_type', 'usage_amount'],
+                    required: ['month', 'usage_type', 'usage_amount'],
                     properties: [
-                        new OA\Property(property: 'subscriber_no', description: "Subscriber No", type: "string"),
                         new OA\Property(property: 'month', description: "Month (1-12)", type: "integer"),
                         new OA\Property(property: 'usage_type', description: "Usage Type", type: "string", enum: ["SMS", "CALL", "INTERNET"]),
                         new OA\Property(property: 'usage_amount', description: "Usage Amount", type: "integer"),
@@ -52,8 +51,8 @@ class UsageController extends Controller
     public function addUsage(UsageAddRequest $request): JsonResponse
     {
         $usage = UsageDTO::createFromRequest($request);
-
-        $usageAddOperation = $this->usageService->addUsage($usage);
+        $subscriber = $request->user();
+        $usageAddOperation = $this->usageService->addUsage($usage, $subscriber);
 
         return $usageAddOperation ? $this->successResponse($usage->toArray(), "Usage has been added successfully!", 201) : $this->errorResponse("Usage cannot be added!");
     }

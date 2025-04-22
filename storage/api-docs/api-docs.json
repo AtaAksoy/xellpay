@@ -12,6 +12,58 @@
         }
     ],
     "paths": {
+        "/api/v1/bill/calculate": {
+            "post": {
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Calculate and store bill",
+                "operationId": "2238cd5cf4c3b1e7530eb7457c2dd889",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "month",
+                                    "year"
+                                ],
+                                "properties": {
+                                    "month": {
+                                        "description": "Month to calculate bill 1-12",
+                                        "type": "integer"
+                                    },
+                                    "year": {
+                                        "description": "Year to calculate bill",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Bill calculated and stored."
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/subscriber/": {
             "put": {
                 "tags": [
@@ -129,16 +181,11 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "subscriber_no",
                                     "month",
                                     "usage_type",
                                     "usage_amount"
                                 ],
                                 "properties": {
-                                    "subscriber_no": {
-                                        "description": "Subscriber No",
-                                        "type": "string"
-                                    },
                                     "month": {
                                         "description": "Month (1-12)",
                                         "type": "integer"
@@ -195,6 +242,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Bill",
+            "description": "Bill"
+        },
         {
             "name": "Subscriber",
             "description": "Subscriber"

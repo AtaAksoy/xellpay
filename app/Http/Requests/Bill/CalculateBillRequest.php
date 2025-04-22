@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Bill;
 
-use App\Enums\FeatureType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UsageAddRequest extends FormRequest
+class CalculateBillRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +23,7 @@ class UsageAddRequest extends FormRequest
     {
         return [
             'month' => 'required|integer|between:1,12',
-            'usage_type' => [Rule::enum(FeatureType::class)],
-            'usage_amount' => 'required|integer'
+            'year' => 'required|integer'
         ];
     }
 }
