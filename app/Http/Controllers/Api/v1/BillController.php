@@ -19,7 +19,7 @@ use OpenApi\Attributes as OA;
 
 class BillController extends Controller
 {
-    
+
     use ApiResponse;
 
     public ?User $subscriber;
@@ -28,8 +28,7 @@ class BillController extends Controller
         public readonly CalculateBillService $calculateBillService,
         public readonly SubscriberService $subscriberService,
         public readonly QueryBillService $queryBillService
-    )
-    {
+    ) {
         $this->subscriber = request()->user();
     }
 
@@ -59,7 +58,8 @@ class BillController extends Controller
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Server Error")
         ]
     )]
-    public function calculateBill(CalculateBillRequest $request) : JsonResponse {
+    public function calculateBill(CalculateBillRequest $request): JsonResponse
+    {
         $bill = $this->calculateBillService->calculateBill($this->subscriber, $request->get('month'), $request->get('year'));
 
         if ($bill instanceof BillDTO) {
@@ -97,7 +97,8 @@ class BillController extends Controller
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Server Error")
         ]
     )]
-    public function queryBill(QueryBillRequest $request) : JsonResponse {
+    public function queryBill(QueryBillRequest $request): JsonResponse
+    {
 
         $checkSubscriber = $this->subscriberService->checkSubscriber($request->get('subscriber_no'));
         if (!$checkSubscriber)
@@ -114,4 +115,49 @@ class BillController extends Controller
         return $this->successResponse($queryResult->toArray());
     }
 
+    #[OA\Post(
+        path: "/api/v1/bill/query-detailed",
+        security: [['bearerAuth' => []]],
+        summary: "Query bill detailed 5 items per page",
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: "application/json",
+                schema: new OA\Schema(
+                    type: "object",
+                    required: ['subscriber_no', 'month', 'year'],
+                    properties: [
+                        new OA\Property(property: 'subscriber_no', description: "Subscriber No", type: "int"),
+                        new OA\Property(property: 'month', description: "Month to calculate bill 1-12", type: "int"),
+                        new OA\Property(property: 'year', description: "Year to calculate bill", type: "int"),
+                        new OA\Property(property: 'page', description: "Page no (default 1)", type: "int"),
+                    ]
+                )
+            )
+        ),
+        tags: ["Bill"],
+        responses: [
+            new OA\Response(response: Response::HTTP_OK, description: "Bill query detail successfull."),
+            new OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: "Unprocessable entity"),
+            new OA\Response(response: Response::HTTP_BAD_REQUEST, description: "Bad Request"),
+            new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Server Error")
+        ]
+    )]
+    public function queryBillDetailed(QueryBillRequest $request): JsonResponse
+    {
+
+        $checkSubscriber = $this->subscriberService->checkSubscriber($request->get('subscriber_no'));
+        if (!$checkSubscriber)
+            return $this->errorResponse("No subscriber found with the number {$request->get('subscriber_no')}!");
+
+        $subscriber = $this->subscriberService->getSubscriber($request->get('subscriber_no'));
+
+        $checkBill = $this->queryBillService->checkHasBill($subscriber, $request->get('month'), $request->get('year'));
+        if (!$checkBill)
+            return $this->errorResponse("No bill for date: " . Carbon::createFromDate($request->get('year'), $request->get('month'), null));
+
+        $queryResult = $this->queryBillService->queryBillDetailed($subscriber, $request->get('month'), $request->get('year'), $request->get('page', 1));
+
+        return $this->successResponse($queryResult->toArray());
+    }
 }

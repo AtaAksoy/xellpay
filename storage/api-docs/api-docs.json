@@ -116,6 +116,67 @@
                 }
             }
         },
+        "/api/v1/bill/query-detailed": {
+            "post": {
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Query bill detailed",
+                "operationId": "73f7f6a7b977c840bd3b16bcf8f46e0d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subscriber_no",
+                                    "month",
+                                    "year"
+                                ],
+                                "properties": {
+                                    "subscriber_no": {
+                                        "description": "Subscriber No",
+                                        "type": "integer"
+                                    },
+                                    "month": {
+                                        "description": "Month to calculate bill 1-12",
+                                        "type": "integer"
+                                    },
+                                    "year": {
+                                        "description": "Year to calculate bill",
+                                        "type": "integer"
+                                    },
+                                    "page": {
+                                        "description": "Page no (default 1)",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bill query detail successfull."
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/subscriber/": {
             "put": {
                 "tags": [

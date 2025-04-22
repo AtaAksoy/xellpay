@@ -24,7 +24,8 @@ class QueryBillRequest extends FormRequest
         return [
             'subscriber_no' => 'required|integer|exists:users,id',
             'month' => 'required|integer|between:1,12',
-            'year' => 'required|integer'
+            'year' => 'required|integer',
+            'page' => 'nullable|integer'
         ];
     }
 }
