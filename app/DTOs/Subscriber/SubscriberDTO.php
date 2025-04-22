@@ -9,6 +9,8 @@ class SubscriberDTO
 
     use ArrayConvertable;
 
+    public ?int $subscriberNo = null;
+
     public function __construct(
         public readonly string $name,
         public readonly string $email,

@@ -1,66 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📦 XellPay Billing API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains the source code for the **XellPay Billing System**, a Laravel-based API that allows subscriber registration, usage tracking, bill calculation, and payment management.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🔗 Source Code
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+📁 **GitHub Repo**: [https://github.com/AtaAksoy/xellpay](https://github.com/AtaAksoy/xellpay)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📚 API Documentation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+You can access the full Swagger-generated API documentation here:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+🔗 [http://xellpay.test/api/documentation](http://xellpay.test/api/documentation)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🎨 Design, Assumptions & Issues
 
-## Laravel Sponsors
+### ✅ Design Overview
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend**: Laravel 12+ PHP 8.3+
+- **Authentication**: JWT (Bearer Token)
+- **Billing Rules**:
+  - **Calls**: First 1000 minutes free, $10 per 1000 minutes after
+  - **Internet**: First 20GB = $50, every extra 10GB = $10
+- **Data Flow**:
+  1. Subscriber registers and authenticates
+  2. Usage (CALL, INTERNET, SMS) is recorded monthly
+  3. Bill is calculated for a month using aggregated usage
+  4. Bill can be paid fully or partially
 
-### Premium Partners
+### ⚙️ Assumptions
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- One active SIM registration per subscriber.
+- Usage is scoped monthly.
+- Only one bill per subscriber per month.
+- All transactions are scoped by bill date.
 
-## Contributing
+### 🐛 Issues Encountered
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP attribute-based OpenAPI annotations required careful nesting.
+- Handling of partial payments using transaction logs without duplicating state.
+- Complex DTO mapping and Eloquent relationship logic.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🗃️ Data Model (ER Diagram)
 
-## Security Vulnerabilities
+```mermaid
+erDiagram
+    User ||--o{ SimRegistration : has
+    SimRegistration ||--o{ Usage : logs
+    SimRegistration ||--o{ Bill : receives
+    Bill ||--o{ BillDetail : contains
+    SimRegistration ||--o{ Transaction : pays
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    User {
+        int id
+        string name
+        string email
+        string password
+    }
 
-## License
+    SimRegistration {
+        int id
+        int user_id
+        string sim_number
+    }
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    Usage {
+        int id
+        int sim_registration_id
+        enum feature_type
+        int feature_amount
+        date usage_date
+    }
+
+    Bill {
+        int id
+        int sim_registration_id
+        date bill_date
+        boolean is_paid
+    }
+
+    BillDetail {
+        int id
+        int bill_id
+        int usage_id
+        float amount
+    }
+
+    Transaction {
+        int id
+        int sim_registration_id
+        int transaction_amount
+        date transaction_date
+    }
+```
+
+---
+
+## 🎥 Project Demo Video
+
+▶️ **Watch the demo**: [Google Drive Link](https://willbeaddedlater.xyzxyz)
+
+---
+
+## 🚀 Getting Started
+
+Clone the repo:
+
+```bash
+git clone https://github.com/AtaAksoy/xellpay.git
+cd xellpay
+```
+
+Install dependencies:
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
+
+Run the server:
+
+```bash
+php artisan serve
+```
+
+---
+
+## 📄 License
+
+This project is open-sourced under the [MIT license](LICENSE).

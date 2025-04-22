@@ -28,6 +28,7 @@ class SubscriberService
         ]);
         $token = $user->createToken('xellpay-auth')->plainTextToken;
         $dto = new SubscriberDTO($user->name, $user->email, null, $token);
+        $dto->subscriberNo = $user->id;
         if (!$user)
             return null;
         return $dto;
@@ -39,7 +40,7 @@ class SubscriberService
             $user = Auth::user();
             $token = $user->createToken('xellpay-auth')->plainTextToken;
             $dto = new SubscriberDTO($user->name, $user->email, null, $token);
-
+            $dto->subscriberNo = $user->id;
             return $dto;
         } else
             return null;

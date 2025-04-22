@@ -26,7 +26,7 @@ class QueryBillService
         if (!$bill)
             return null;
 
-        return new QueryBillDTO(Carbon::createFromDate($year, $month, null), $bill->details()->sum('amount'), false);
+        return new QueryBillDTO(Carbon::createFromDate($year, $month, null), $bill->details()->sum('amount'), $bill->is_paid);
     }
 
     public function queryBillDetailed(User $subscriber, int $month, int $year, int $page = 1) : ?QueryBillDetailedDTO {

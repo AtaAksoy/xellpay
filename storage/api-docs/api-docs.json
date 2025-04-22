@@ -8,7 +8,7 @@
     "servers": [
         {
             "url": "http://xellpay.test",
-            "description": "local server"
+            "description": "Local server"
         }
     ],
     "paths": {
@@ -17,7 +17,7 @@
                 "tags": [
                     "Bill"
                 ],
-                "summary": "Calculate and store bill",
+                "summary": "Calculate and store a bill for the subscriber",
                 "operationId": "2238cd5cf4c3b1e7530eb7457c2dd889",
                 "requestBody": {
                     "required": true,
@@ -30,12 +30,14 @@
                                 ],
                                 "properties": {
                                     "month": {
-                                        "description": "Month to calculate bill 1-12",
-                                        "type": "integer"
+                                        "description": "Month to calculate bill for (1-12)",
+                                        "type": "integer",
+                                        "example": 4
                                     },
                                     "year": {
-                                        "description": "Year to calculate bill",
-                                        "type": "integer"
+                                        "description": "Year to calculate bill for",
+                                        "type": "integer",
+                                        "example": 2025
                                     }
                                 },
                                 "type": "object"
@@ -45,16 +47,104 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Bill calculated and stored."
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Bill calculated and stored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bill successfully calculated!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "billDate": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-04-01"
+                                                },
+                                                "details": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "usageId": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 5
+                                                            },
+                                                            "usage": {
+                                                                "properties": {
+                                                                    "featureType": {
+                                                                        "type": "string",
+                                                                        "example": "CALL"
+                                                                    },
+                                                                    "usageAmount": {
+                                                                        "type": "integer",
+                                                                        "example": 500
+                                                                    },
+                                                                    "month": {
+                                                                        "type": "integer",
+                                                                        "example": 4
+                                                                    },
+                                                                    "year": {
+                                                                        "type": "integer",
+                                                                        "example": 2025
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Failed to calculate bill",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bill calculation failed!"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Server error"
                     }
                 },
                 "security": [
@@ -69,7 +159,7 @@
                 "tags": [
                     "Bill"
                 ],
-                "summary": "Query bill",
+                "summary": "Query total bill summary for a given subscriber, month, and year",
                 "operationId": "65d21186783478d73e6707012967cb2b",
                 "requestBody": {
                     "required": true,
@@ -84,15 +174,18 @@
                                 "properties": {
                                     "subscriber_no": {
                                         "description": "Subscriber No",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 10004567
                                     },
                                     "month": {
-                                        "description": "Month to calculate bill 1-12",
-                                        "type": "integer"
+                                        "description": "Month to query the bill for (1-12)",
+                                        "type": "integer",
+                                        "example": 2
                                     },
                                     "year": {
-                                        "description": "Year to calculate bill",
-                                        "type": "integer"
+                                        "description": "Year to query the bill for",
+                                        "type": "integer",
+                                        "example": 2025
                                     }
                                 },
                                 "type": "object"
@@ -102,18 +195,82 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Bill query successfull."
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Bill query successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Query successful."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 60
+                                                },
+                                                "is_paid": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "bill_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-02-01"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Subscriber not found or no bill for that date",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bill for date: February 2025"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Server error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/bill/query-detailed": {
@@ -121,7 +278,7 @@
                 "tags": [
                     "Bill"
                 ],
-                "summary": "Query bill detailed",
+                "summary": "Query detailed bill (paginated 5 items per page)",
                 "operationId": "73f7f6a7b977c840bd3b16bcf8f46e0d",
                 "requestBody": {
                     "required": true,
@@ -136,19 +293,23 @@
                                 "properties": {
                                     "subscriber_no": {
                                         "description": "Subscriber No",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 10004567
                                     },
                                     "month": {
-                                        "description": "Month to calculate bill 1-12",
-                                        "type": "integer"
+                                        "description": "Month to calculate bill (1-12)",
+                                        "type": "integer",
+                                        "example": 2
                                     },
                                     "year": {
                                         "description": "Year to calculate bill",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 2025
                                     },
                                     "page": {
-                                        "description": "Page no (default 1)",
-                                        "type": "integer"
+                                        "description": "Page number (default: 1)",
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -158,16 +319,164 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Bill query detail successfull."
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Bill query successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Query successful."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Invalid input or subscriber/bill not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bill for date: 2025-02-01"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bill/pay": {
+            "post": {
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Pay a bill partially or fully for a specific month",
+                "operationId": "af394b8303459404740d4099f0020c7c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "month",
+                                    "year",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "month": {
+                                        "description": "Month to pay the bill for (1-12)",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "year": {
+                                        "description": "Year to pay the bill for",
+                                        "type": "integer",
+                                        "example": 2025
+                                    },
+                                    "amount": {
+                                        "description": "Payment amount",
+                                        "type": "integer",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment processed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment successful."
+                                        },
+                                        "remaining": {
+                                            "type": "integer",
+                                            "example": 20
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid payment (e.g. overpayment)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are paying too much. Remaining amount is $20"
+                                        },
+                                        "remaining": {
+                                            "type": "integer",
+                                            "example": 20
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
                     }
                 },
                 "security": [
@@ -182,7 +491,7 @@
                 "tags": [
                     "Subscriber"
                 ],
-                "summary": "Create a subscriber",
+                "summary": "Create a new subscriber account",
                 "operationId": "d517394b07a3d21ab09f60fa2d265544",
                 "requestBody": {
                     "required": true,
@@ -197,20 +506,24 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "description": "Subscriber Name",
-                                        "type": "string"
+                                        "description": "Subscriber full name",
+                                        "type": "string",
+                                        "example": "Jane Doe"
                                     },
                                     "email": {
-                                        "description": "Subscriber Email",
-                                        "type": "string"
+                                        "description": "Subscriber email address",
+                                        "type": "string",
+                                        "example": "jane@example.com"
                                     },
                                     "password": {
                                         "description": "Password",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "password123"
                                     },
                                     "password_confirmation": {
                                         "description": "Password confirmation",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "password123"
                                     }
                                 },
                                 "type": "object"
@@ -220,16 +533,50 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Register Successfully"
+                        "description": "Subscriber created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subscriber created successfully!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Jane Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "jane@example.com"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": null
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Validation error"
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Bad request"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Server error"
                     }
                 }
             }
@@ -239,7 +586,7 @@
                 "tags": [
                     "Subscriber"
                 ],
-                "summary": "Login as subscriber",
+                "summary": "Authenticate an existing subscriber",
                 "operationId": "03b13fdecc19e9f22e6fc55ba177f156",
                 "requestBody": {
                     "required": true,
@@ -252,12 +599,14 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "Subscriber Email",
-                                        "type": "string"
+                                        "description": "Subscriber email address",
+                                        "type": "string",
+                                        "example": "jane@example.com"
                                     },
                                     "password": {
-                                        "description": "Password",
-                                        "type": "string"
+                                        "description": "Subscriber password",
+                                        "type": "string",
+                                        "example": "password123"
                                     }
                                 },
                                 "type": "object"
@@ -267,16 +616,50 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login Successfully"
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Jane Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "jane@example.com"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJh..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Validation error"
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Invalid credentials"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Server error"
                     }
                 }
             }
@@ -300,21 +683,24 @@
                                 ],
                                 "properties": {
                                     "month": {
-                                        "description": "Month (1-12)",
-                                        "type": "integer"
+                                        "description": "Month of usage (1-12)",
+                                        "type": "integer",
+                                        "example": 4
                                     },
                                     "usage_type": {
-                                        "description": "Usage Type",
+                                        "description": "Type of usage (SMS, CALL, INTERNET)",
                                         "type": "string",
                                         "enum": [
                                             "SMS",
                                             "CALL",
                                             "INTERNET"
-                                        ]
+                                        ],
+                                        "example": "CALL"
                                     },
                                     "usage_amount": {
-                                        "description": "Usage Amount",
-                                        "type": "integer"
+                                        "description": "Usage amount (e.g., minutes, MBs, count)",
+                                        "type": "integer",
+                                        "example": 500
                                     }
                                 },
                                 "type": "object"
@@ -324,10 +710,49 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usage Added"
+                        "description": "Usage added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usage has been added successfully!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "featureType": {
+                                                    "type": "string",
+                                                    "example": "CALL"
+                                                },
+                                                "usageAmount": {
+                                                    "type": "integer",
+                                                    "example": 500
+                                                },
+                                                "month": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "year": {
+                                                    "type": "integer",
+                                                    "example": null,
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Unprocessable entity"
+                        "description": "Validation failed"
                     },
                     "400": {
                         "description": "Bad Request"

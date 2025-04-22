@@ -22,6 +22,7 @@ Route::prefix('v1')->name('v1.')->middleware(['force-json'])->group(function() {
         Route::middleware(['auth:sanctum'])->group(function() {
             Route::post('calculate', [App\Http\Controllers\Api\v1\BillController::class, 'calculateBill'])->name('calculate');
             Route::post('query-detailed', [App\Http\Controllers\Api\v1\BillController::class, 'queryBillDetailed'])->name('query-detailed');
+            Route::post('pay', [App\Http\Controllers\Api\v1\BillController::class, 'makePayment'])->name('pay-bill');
         });
         Route::post('query', [App\Http\Controllers\Api\v1\BillController::class, 'queryBill'])->name('query');
     });
