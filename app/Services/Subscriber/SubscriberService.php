@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Hash;
 class SubscriberService
 {
 
+    public function checkSubscriber(int $subscriberId) : bool {
+        return User::where('id', $subscriberId)->exists();
+    }
+
+    public function getSubscriber(int $subscriberId) : ?User {
+        return User::where('id', $subscriberId)->first();
+    }
 
     public function create(SubscriberDTO $subscriber): ?SubscriberDTO
     {

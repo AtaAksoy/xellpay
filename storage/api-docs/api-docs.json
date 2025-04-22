@@ -64,6 +64,58 @@
                 ]
             }
         },
+        "/api/v1/bill/query": {
+            "post": {
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Query bill",
+                "operationId": "65d21186783478d73e6707012967cb2b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subscriber_no",
+                                    "month",
+                                    "year"
+                                ],
+                                "properties": {
+                                    "subscriber_no": {
+                                        "description": "Subscriber No",
+                                        "type": "integer"
+                                    },
+                                    "month": {
+                                        "description": "Month to calculate bill 1-12",
+                                        "type": "integer"
+                                    },
+                                    "year": {
+                                        "description": "Year to calculate bill",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bill query successfull."
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/subscriber/": {
             "put": {
                 "tags": [
