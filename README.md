@@ -14,13 +14,13 @@ This repository contains the source code for the **XellPay Billing System**, a L
 
 You can access the full Swagger-generated API documentation here:
 
-🔗 [http://xellpay.test/api/documentation](http://xellpay.test/api/documentation)
+🔗 [https://xellpay-main-pbcmwd.laravel.cloud/api/documentation](https://xellpay-main-pbcmwd.laravel.cloud/api/documentation)
 
 ## 🎨 Design, Assumptions & Issues
 
 ### ✅ Design Overview
 
-- **Backend**: Laravel 12+ PHP 8.3+
+- **Backend**: Laravel 11+ PHP 8.4
 - **Authentication**: JWT (Bearer Token)
 - **Billing Rules**:
   - **Calls**: First 1000 minutes free, $10 per 1000 minutes after
@@ -103,7 +103,7 @@ erDiagram
 
 ## 🎥 Project Demo Video
 
-▶️ **Watch the demo**: [Google Drive Link](https://willbeaddedlater.xyzxyz)
+▶️ **Watch the demo**: [Google Drive Link](https://drive.google.com/file/d/YOUR_VIDEO_ID/view)
 
 ---
 
