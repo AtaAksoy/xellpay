@@ -135,9 +135,8 @@ class BillController extends Controller
                 mediaType: "application/json",
                 schema: new OA\Schema(
                     type: "object",
-                    required: ['subscriber_no', 'month', 'year'],
+                    required: ['month', 'year'],
                     properties: [
-                        new OA\Property(property: 'subscriber_no', description: "Subscriber No", type: "integer", example: 10004567),
                         new OA\Property(property: 'month', description: "Month to query the bill for (1-12)", type: "integer", example: 2),
                         new OA\Property(property: 'year', description: "Year to query the bill for", type: "integer", example: 2025)
                     ]
@@ -184,14 +183,9 @@ class BillController extends Controller
     )]
     public function queryBill(QueryBillRequest $request): JsonResponse
     {
-        $subscriberNo = $request->get('subscriber_no');
+        $subscriberNo = $request->user()->id;
         $month = $request->get('month');
         $year = $request->get('year');
-
-        $checkSubscriber = $this->subscriberService->checkSubscriber($subscriberNo);
-        if (!$checkSubscriber) {
-            return $this->errorResponse("No subscriber found with the number {$subscriberNo}!", 400);
-        }
 
         $subscriber = $this->subscriberService->getSubscriber($subscriberNo);
 
@@ -216,9 +210,8 @@ class BillController extends Controller
                 mediaType: "application/json",
                 schema: new OA\Schema(
                     type: "object",
-                    required: ['subscriber_no', 'month', 'year'],
+                    required: ['month', 'year'],
                     properties: [
-                        new OA\Property(property: 'subscriber_no', description: "Subscriber No", type: "integer", example: 10004567),
                         new OA\Property(property: 'month', description: "Month to calculate bill (1-12)", type: "integer", example: 2),
                         new OA\Property(property: 'year', description: "Year to calculate bill", type: "integer", example: 2025),
                         new OA\Property(property: 'page', description: "Page number (default: 1)", type: "integer", example: 1),

@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
     description: "xellpay api"
 )]
 #[OA\Server(
-    url: 'https://xellpay-main-pbcmwd.laravel.cloud',
+    url: 'http://xellpay.test',
     description: "Local server"
 )]
 #[OA\SecurityScheme(

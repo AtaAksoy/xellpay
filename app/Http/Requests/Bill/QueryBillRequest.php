@@ -22,7 +22,6 @@ class QueryBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subscriber_no' => 'required|integer|exists:users,id',
             'month' => 'required|integer|between:1,12',
             'year' => 'required|integer',
             'page' => 'nullable|integer'

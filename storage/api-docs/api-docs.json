@@ -167,16 +167,10 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "subscriber_no",
                                     "month",
                                     "year"
                                 ],
                                 "properties": {
-                                    "subscriber_no": {
-                                        "description": "Subscriber No",
-                                        "type": "integer",
-                                        "example": 10004567
-                                    },
                                     "month": {
                                         "description": "Month to query the bill for (1-12)",
                                         "type": "integer",
@@ -286,16 +280,10 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "subscriber_no",
                                     "month",
                                     "year"
                                 ],
                                 "properties": {
-                                    "subscriber_no": {
-                                        "description": "Subscriber No",
-                                        "type": "integer",
-                                        "example": 10004567
-                                    },
                                     "month": {
                                         "description": "Month to calculate bill (1-12)",
                                         "type": "integer",
