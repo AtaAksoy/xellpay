@@ -14,7 +14,7 @@ This repository contains the source code for the **XellPay Billing System**, a L
 
 You can access the full Swagger-generated API documentation here:
 
-🔗 [https://xellpay-main-pbcmwd.laravel.cloud/api/documentation](https://xellpay-main-pbcmwd.laravel.cloud/api/documentation)
+🔗 [http://54.205.133.161:8000/api/documentation](http://54.205.133.161:8000/api/documentation)
 
 ## 🎨 Design, Assumptions & Issues
 
