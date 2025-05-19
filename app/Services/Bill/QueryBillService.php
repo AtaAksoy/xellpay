@@ -10,27 +10,36 @@ use App\DTOs\Usage\UsageDTO;
 use App\Models\User;
 use App\Services\Subscriber\SubscriberService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class QueryBillService
 {
 
     public function checkHasBill(User $subscriber, int $month, int $year): bool
     {
-        return $subscriber->sim_registration->bills()->whereDate('bill_date', Carbon::createFromDate($year, $month, null))->exists();
+        $query = $subscriber->sim_registration->bills()
+            ->whereYear('bill_date', $year)
+            ->whereMonth('bill_date', $month);
+
+        return $query->exists();
     }
+
 
     public function queryBill(User $subscriber, int $month, int $year): ?QueryBillDTO
     {
         // check subscriber
-        $bill = $subscriber->sim_registration->bills()->whereDate('bill_date', Carbon::createFromDate($year, $month, null))->first();
+        $bill = $subscriber->sim_registration->bills()->whereYear('bill_date', $year)
+            ->whereMonth('bill_date', $month)->first();
         if (!$bill)
             return null;
 
         return new QueryBillDTO(Carbon::createFromDate($year, $month, null), $bill->details()->sum('amount'), $bill->is_paid);
     }
 
-    public function queryBillDetailed(User $subscriber, int $month, int $year, int $page = 1) : ?QueryBillDetailedDTO {
-        $bill = $subscriber->sim_registration->bills()->whereDate('bill_date', Carbon::createFromDate($year, $month, null))->first();
+    public function queryBillDetailed(User $subscriber, int $month, int $year, int $page = 1): ?QueryBillDetailedDTO
+    {
+        $bill = $subscriber->sim_registration->bills()->whereYear('bill_date', $year)
+            ->whereMonth('bill_date', $month)->first();
         if (!$bill)
             return null;
 
